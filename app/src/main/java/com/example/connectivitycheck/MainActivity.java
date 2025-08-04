@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.os.Build;
 import android.os.Bundle;
 
 
@@ -45,14 +46,13 @@ public class MainActivity extends AppCompatActivity {
     private void checkInternetStatus() {
         StringBuilder sb = new StringBuilder();
 
-//        clickCounter++;
-
         Network activeNetwork = connectivityManager.getActiveNetwork();
         NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
 
         if (capabilities != null) {
             sb.append("System APIs:\n");
-            sb.append("***Validated***: ").append(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)?"True":"False").append("\n\n");
+            sb.append("***Validated***: ").append(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)?"True":"False").append("\n");
+            sb.append("***Internet Access***: ").append(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)?"True":"False").append("\n\n");
 
             sb.append("1)   Transports: ").append("WIFI").append("\n");
             sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)?"Connected":"-").append("\n\n");
@@ -76,13 +76,25 @@ public class MainActivity extends AppCompatActivity {
             sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)?"Connected":"-").append("\n\n");
 
             sb.append("8)   Transports: ").append("LOWPAN").append("\n");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)?"Connected":"-").append("\n\n");
+            } else {
+                sb.append("\t\t\tStatus: Not supported (API < 27)\n\n");
+            }
 
             sb.append("9)   Transports: ").append("SATELLITE").append("\n");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE)?"Connected":"-").append("\n\n");
+            } else {
+                sb.append("\t\t\tStatus: Not supported (API < 30)\n\n");
+            }
 
             sb.append("10)  Transports: ").append("THREAD").append("\n");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_THREAD)?"Connected":"-").append("\n\n");
+            } else {
+                sb.append("\t\t\tStatus: Not supported (API < 31)\n\n");
+            }
 
             sb.append("\nManual checks:\n");
 
