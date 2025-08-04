@@ -19,16 +19,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView outputText;
     private TextView counterText;
     private ConnectivityManager connectivityManager;
     private Handler mainHandler = new Handler(Looper.getMainLooper());
-
-//    private int clickCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,21 +73,21 @@ public class MainActivity extends AppCompatActivity {
 
             sb.append("8)   Transports: ").append("LOWPAN").append("\n");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)?"Connected":"-").append("\n\n");
+                sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)?"Connected":"-").append("\n\n");
             } else {
                 sb.append("\t\t\tStatus: Not supported (API < 27)\n\n");
             }
 
             sb.append("9)   Transports: ").append("SATELLITE").append("\n");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE)?"Connected":"-").append("\n\n");
+                sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE)?"Connected":"-").append("\n\n");
             } else {
                 sb.append("\t\t\tStatus: Not supported (API < 30)\n\n");
             }
 
             sb.append("10)  Transports: ").append("THREAD").append("\n");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_THREAD)?"Connected":"-").append("\n\n");
+                sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_THREAD)?"Connected":"-").append("\n\n");
             } else {
                 sb.append("\t\t\tStatus: Not supported (API < 31)\n\n");
             }
@@ -108,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                 mainHandler.post(() -> {
                     outputText.setText(sb.toString());
-                    counterText.setText(counterText.toString());
+                    counterText.setText("");
                 });
 
             }).start();
@@ -139,31 +135,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             return false;
         }
-    }
-
-    private List<String> getTransportTypes() {
-//        private List<String> getTransportTypes(NetworkCapabilities nc) {
-        List<String> transports = new ArrayList<>();
-
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) transports.add("WIFI");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) transports.add("CELLULAR");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) transports.add("VPN");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) transports.add("ETHERNET");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) transports.add("BLUETOOTH");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_USB)) transports.add("USB");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)) transports.add("WIFI_AWARE");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)) transports.add("LOWPAN");
-//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_TEST)) transports.add("TEST");
-
-//        transports.add("WIFI");
-//        transports.add("CELLULAR");
-//        transports.add("VPN");
-//        transports.add("ETHERNET");
-//        transports.add("BLUETOOTH");
-//        transports.add("USB");
-//        transports.add("WIFI_AWARE");
-//        transports.add("LOWPAN");
-
-        return transports;
     }
 }
