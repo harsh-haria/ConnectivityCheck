@@ -1,0 +1,157 @@
+package com.example.connectivitycheck;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.os.Bundle;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+    private TextView outputText;
+    private TextView counterText;
+    private ConnectivityManager connectivityManager;
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
+
+//    private int clickCounter = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        outputText = findViewById(R.id.outputText);
+        counterText = findViewById(R.id.counterText);
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        Button checkButton = findViewById(R.id.checkButton);
+        checkButton.setOnClickListener(v -> checkInternetStatus());
+    }
+
+    private void checkInternetStatus() {
+        StringBuilder sb = new StringBuilder();
+
+//        clickCounter++;
+
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+
+        if (capabilities != null) {
+            sb.append("System APIs:\n");
+            sb.append("***Validated***: ").append(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)?"True":"False").append("\n\n");
+
+            sb.append("1)   Transports: ").append("WIFI").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)?"Connected":"-").append("\n\n");
+
+            sb.append("2)   Transports: ").append("CELLULAR").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)?"Connected":"-").append("\n\n");
+
+            sb.append("3)   Transports: ").append("VPN").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)?"Connected":"-").append("\n\n");
+
+            sb.append("4)   Transports: ").append("BLUETOOTH").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)?"Connected":"-").append("\n\n");
+
+            sb.append("5)   Transports: ").append("ETHERNET").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)?"Connected":"-").append("\n\n");
+
+            sb.append("6)   Transports: ").append("USB").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_USB)?"Connected":"-").append("\n\n");
+
+            sb.append("7)   Transports: ").append("WIFI_AWARE").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)?"Connected":"-").append("\n\n");
+
+            sb.append("8)   Transports: ").append("LOWPAN").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)?"Connected":"-").append("\n\n");
+
+            sb.append("9)   Transports: ").append("SATELLITE").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE)?"Connected":"-").append("\n\n");
+
+            sb.append("10)  Transports: ").append("THREAD").append("\n");
+            sb.append("\t\t\tStatus: ").append(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_THREAD)?"Connected":"-").append("\n\n");
+
+            sb.append("\nManual checks:\n");
+
+            // Run DNS + HTTP tests on background thread
+            new Thread(() -> {
+                boolean dnsWorks = isDNSWorking();
+                boolean httpWorks = isHttpWorking();
+
+                sb.append("DNS resolution \t(Google): ").append(dnsWorks ? "OK" : "FAILED").append("\n");
+                sb.append("HTTP test (Browserstack): ").append(httpWorks ? "OK" : "FAILED").append("\n");
+
+                mainHandler.post(() -> {
+                    outputText.setText(sb.toString());
+                    counterText.setText(counterText.toString());
+                });
+
+            }).start();
+        }
+        else {
+            sb.append("\n\nNo network found!\n\n");
+            outputText.setText(sb.toString());
+        }
+
+    }
+
+    private boolean isDNSWorking() {
+        try {
+            InetAddress address = InetAddress.getByName("google.com");
+            return address != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isHttpWorking() {
+        try {
+            URL url = new URL("https://browserstack.com");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            conn.connect();
+            return conn.getResponseCode() == 200;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private List<String> getTransportTypes() {
+//        private List<String> getTransportTypes(NetworkCapabilities nc) {
+        List<String> transports = new ArrayList<>();
+
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) transports.add("WIFI");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) transports.add("CELLULAR");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) transports.add("VPN");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) transports.add("ETHERNET");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) transports.add("BLUETOOTH");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_USB)) transports.add("USB");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)) transports.add("WIFI_AWARE");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)) transports.add("LOWPAN");
+//        if (nc.hasTransport(NetworkCapabilities.TRANSPORT_TEST)) transports.add("TEST");
+
+//        transports.add("WIFI");
+//        transports.add("CELLULAR");
+//        transports.add("VPN");
+//        transports.add("ETHERNET");
+//        transports.add("BLUETOOTH");
+//        transports.add("USB");
+//        transports.add("WIFI_AWARE");
+//        transports.add("LOWPAN");
+
+        return transports;
+    }
+}
